@@ -80,23 +80,23 @@ All services should show `running` (except `airflow-init` which exits after setu
 | **Airflow UI**     | http://localhost:8080 (user: `admin`, pass: `admin`) |
 | **Spark Master UI**| http://localhost:8180 |
 | **Spark Worker UI**| http://localhost:8181 |
-| **Kafka**          | `docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list` |
+| **Kafka**          | `docker compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list` |
 | **Postgres**       | Port 5432 (used by Airflow internally)       |
 
 ### Step 3: Run the Kafka Producer
 
 ```bash
 # Produce 500 order events to the 'ecommerce_orders' topic
-docker compose exec airflow-scheduler python /opt/airflow/kafka/producer.py --num-events 500
+docker compose exec --user airflow airflow-scheduler python kafka/producer.py
 ```
 
 Verify events were produced:
 
 ```bash
-docker compose exec kafka kafka-console-consumer.sh \
-    --bootstrap-server localhost:9092 \
-    --topic ecommerce_orders \
-    --from-beginning \
+docker compose exec kafka kafka-console-consumer `
+    --bootstrap-server localhost:9092 `
+    --topic listing-events `
+    --from-beginning `
     --max-messages 5
 ```
 

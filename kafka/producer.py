@@ -2,13 +2,12 @@ from faker import Faker
 import random
 import numpy as np
 from datetime import timedelta, datetime
+from kafka import KafkaProducer
+import json
 
 
 class RentalListingGen:
     def __init__(self):
-        Faker.seed(5432)
-        random.seed(5432)
-        np.random.seed(5432)
         self.fake = Faker()
         self.cities = [
             # Alabama
@@ -212,6 +211,20 @@ class RentalListingGen:
         return listing
 
 
-rental_gen = RentalListingGen()
-for i in range(5):
-    print(rental_gen.generate_listing())
+
+listing_gen = RentalListingGen()
+def create_producer(bootstrap_servers: str = 'kafka:9092'):
+    producer = KafkaProducer(
+        bootstrap_servers = bootstrap_servers,
+        acks='all',
+        value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    )
+    return producer
+
+producer = create_producer()
+
+for i in range(10):
+    future=producer.send('listing-events',listing_gen.generate_listing())
+producer.close()
+
+

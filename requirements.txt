@@ -1,0 +1,4 @@
+faker
+kafka-python
+apache-airflow
+numpy
