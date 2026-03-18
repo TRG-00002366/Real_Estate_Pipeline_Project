@@ -4,7 +4,8 @@ import numpy as np
 from datetime import timedelta, datetime
 from kafka import KafkaProducer
 import json
-
+import time
+import argparse
 
 class RentalListingGen:
     def __init__(self):
@@ -223,8 +224,14 @@ def create_producer(bootstrap_servers: str = 'kafka:9092'):
 
 producer = create_producer()
 
-for i in range(10):
+parser = argparse.ArgumentParser()
+parser.add_argument("--num-events",type=int,default=10)
+args = parser.parse_args()
+num_events = args.num_events
+
+for i in range(num_events):
     future=producer.send('listing-events',listing_gen.generate_listing())
+    time.sleep(1)
 producer.close()
 
 
