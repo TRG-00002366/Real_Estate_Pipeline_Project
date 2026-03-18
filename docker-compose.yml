@@ -88,6 +88,24 @@ services:
       - ./spark_data:/opt/spark-data
     networks:
       - pipeline-network
+  # =============================================================================
+  # Create topic on startup
+  # =============================================================================
+  kafka-setup:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: kafka-setup
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: >
+      bash -c "python /opt/airflow/kafka/kafka-setup.py"
+    volumes:
+      - ./kafka:/opt/airflow/kafka
+    networks:
+      - pipeline-network
+    restart: "no"
 
   spark-master:
     image: apache/spark:3.5.0

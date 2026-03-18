@@ -2,7 +2,7 @@ from kafka.admin import KafkaAdminClient, NewTopic
 from kafka.errors import TopicAlreadyExistsError
 # Connect to Kafka
 admin_client = KafkaAdminClient(
-    bootstrap_servers='localhost:9094',
+    bootstrap_servers='kafka:9092',
     client_id='topic-creator'
 )
 

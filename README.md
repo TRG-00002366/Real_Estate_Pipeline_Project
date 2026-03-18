@@ -86,8 +86,8 @@ All services should show `running` (except `airflow-init` which exits after setu
 ### Step 3: Run the Kafka Producer
 
 ```bash
-# Produce 500 order events to the 'ecommerce_orders' topic
-docker compose exec --user airflow airflow-scheduler python kafka/producer.py
+# Produce 500 order events to the 'listing-events' topic
+docker compose exec --user airflow airflow-scheduler python kafka/producer.py --num-events 500
 ```
 
 Verify events were produced:
