@@ -77,9 +77,9 @@ All services should show `running` (except `airflow-init` which exits after setu
 
 | Service            | URL / Check                                 |
 |--------------------|--------------------------------------------- |
-| **Airflow UI**     | http://localhost:8080 (user: `admin`, pass: `admin`) |
-| **Spark Master UI**| http://localhost:8180 |
-| **Spark Worker UI**| http://localhost:8181 |
+| **Airflow UI**     | http://localhost:8082 (user: `admin`, pass: `admin`) |
+| **Spark Master UI**| http://localhost:8081 |
+| **Spark Worker UI**| http://localhost:8083 |
 | **Kafka**          | `docker compose exec kafka kafka-topics --bootstrap-server localhost:9092 --list` |
 | **Postgres**       | Port 5432 (used by Airflow internally)       |
 

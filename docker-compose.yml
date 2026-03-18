@@ -113,6 +113,8 @@ services:
     image: apache/spark:3.5.0
     container_name: pipeline-spark-worker
     user: root
+    ports:
+    - "8083:8081" 
     depends_on:
       spark-init:
         condition: service_completed_successfully
