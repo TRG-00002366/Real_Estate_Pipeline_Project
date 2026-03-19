@@ -5,7 +5,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from datetime import datetime
 
 with DAG(
-    dag_id="run_pipeline",
+    dag_id="listing_pipeline",
     start_date=datetime(2026, 3, 19),
     schedule=None,
     catchup=False,
@@ -17,7 +17,7 @@ with DAG(
                         )
     run_producer = BashOperator(
         task_id="run_producer",
-        bash_command="python /opt/airflow/kafka/producer.py --num-events 15"
+        bash_command="python /opt/airflow/kafka/producer.py --num-events 500"
     )
 
     run_consumer = BashOperator(
@@ -41,4 +41,4 @@ with DAG(
     /opt/airflow/spark/batch_df_etl.py"
     )
 
-    start >> run_producer >> run_consumer >> run_batch_rdd >> run_batch_df >> end
+    start >> [run_producer,run_consumer] >> run_batch_rdd >> run_batch_df >> end

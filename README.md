@@ -87,7 +87,7 @@ All services should show `running` (except `airflow-init` which exits after setu
 
 ```bash
 # Produce 500 order events to the 'listing-events' topic
-docker compose exec --user airflow airflow-scheduler python opt/airflow/kafka/producer.py --num-events 500
+docker compose exec --user airflow airflow-scheduler python /opt/airflow/kafka/producer.py --num-events 500
 ```
 
 Verify events were produced:
@@ -115,24 +115,25 @@ This will consume messages for 120 seconds and write raw Parquet files to `data/
 ### Step 5: Run the Batch RDD ETL
 
 ```bash
-docker compose exec airflow-scheduler spark-submit \
+docker compose exec airflow-scheduler spark-submit `
     /opt/airflow/spark/batch_rdd_etl.py
 ```
 
-Output: `data/transformed/rdd_revenue_by_product/` — revenue per product as text files.
+Output: `data/transformed/rented_listings/` — Listings with rented status.
+Output: `data/transformed/revenue_per_property/` — Revenue Per Property
 
 ### Step 6: Run the Batch DataFrame ETL
 
 ```bash
-docker compose exec airflow-scheduler spark-submit \
+docker compose exec airflow-scheduler spark-submit `
     /opt/airflow/spark/batch_df_etl.py
 ```
 
 Outputs (all Parquet):
-- `data/transformed/hourly_sales_summary/`
-- `data/transformed/top_10_products/`
-- `data/transformed/regional_revenue/`
-- `data/transformed/order_status_breakdown/`
+- `data/transformed/hourly_rentals/`
+- `data/transformed/rentals_by_bedroom/`
+- `data/transformed/revenue_by_state/`
+- `data/transformed/status_breakdown/`
 
 ### Step 7: Run via Airflow (Full Orchestration)
 
@@ -140,7 +141,7 @@ Instead of running each step manually, trigger the DAG from the Airflow UI:
 
 1. Open http://localhost:8080
 2. Log in with `admin` / `admin`
-3. Find the `ecommerce_pipeline` DAG
+3. Find the `listing_pipeline` DAG
 4. Toggle it **ON** (if paused)
 5. Click **Trigger DAG** (▶ button)
 6. Monitor task execution in the **Graph** view
@@ -148,15 +149,15 @@ Instead of running each step manually, trigger the DAG from the Airflow UI:
 Or trigger from the CLI:
 
 ```bash
-docker compose exec airflow-scheduler airflow dags trigger ecommerce_pipeline
+docker compose exec --user airflow airflow-scheduler airflow dags trigger listing_pipeline
 ```
 
 ### Step 8: Inspect Output Data
 
 ```bash
 # Check that output directories have data
-docker compose exec airflow-scheduler ls -la /opt/airflow/data/raw/orders/
-docker compose exec airflow-scheduler ls -la /opt/airflow/data/transformed/
+docker compose exec airflow-scheduler ls -la /opt/data/raw/
+docker compose exec airflow-scheduler ls -la /opt/data/transformed/
 ```
 
 ### Step 9: Tear Down

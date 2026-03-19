@@ -230,10 +230,15 @@ def main():
     args = parser.parse_args()
     num_events = args.num_events
 
-    for i in range(num_events):
+    for i in range(num_events-20):
         future=producer.send('listing-events',listing_gen.generate_listing())
-    producer.close()
+
     
+    for i in range(20):
+        future=producer.send('listing-events',listing_gen.generate_listing())
+        time.sleep(1)
+    producer.close()
+
 if __name__ == "__main__":
     main()
 
