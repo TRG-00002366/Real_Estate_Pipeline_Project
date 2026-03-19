@@ -17,7 +17,7 @@ with DAG(
                         )
     run_producer = BashOperator(
         task_id="run_producer",
-        bash_command="python /opt/airflow/kafka/producer.py --num-events 5"
+        bash_command="python /opt/airflow/kafka/producer.py --num-events 15"
     )
 
     start >> run_producer >> end

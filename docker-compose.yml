@@ -83,9 +83,9 @@ services:
   spark-init:
     image: busybox
     container_name: pipeline-spark-init
-    command: [ "sh", "-c", "mkdir -p /opt/spark-data/landing /opt/spark-data/gold && chmod -R 777 /opt/spark-data" ]
+    command: [ "sh", "-c", "chmod -R 777 /opt/data" ]
     volumes:
-      - ./spark_data:/opt/spark-data
+      - ./data:/opt/data
     networks:
       - pipeline-network
   # =============================================================================
@@ -119,8 +119,8 @@ services:
       - SPARK_NO_DAEMONIZE=true
     command: [ "/opt/spark/sbin/start-master.sh" ]
     volumes:
-      - ./jobs:/opt/spark-jobs
-      - ./spark_data:/opt/spark-data
+      - ./spark:/opt/airflow/spark
+      - ./data:/opt/data
     depends_on:
       spark-init:
         condition: service_completed_successfully
@@ -145,8 +145,8 @@ services:
       - SPARK_NO_DAEMONIZE=true
     command: [ "/opt/spark/sbin/start-worker.sh", "spark://spark-master:7077" ]
     volumes:
-      - ./jobs:/opt/spark-jobs
-      - ./spark_data:/opt/spark-data
+      - ./spark:/opt/airflow/spark
+      - ./data:/opt/data
     networks:
       - pipeline-network
 
@@ -227,8 +227,8 @@ services:
       - ./kafka:/opt/airflow/kafka
       - ./airflow/dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
-      - ./jobs:/opt/spark-jobs
-      - ./spark_data:/opt/spark-data
+      - ./spark:/opt/airflow/spark
+      - ./data:/opt/data
     healthcheck:
       test: [ "CMD", "curl", "--fail", "http://localhost:8080/health" ]
       interval: 30s
@@ -266,8 +266,8 @@ services:
       - ./kafka:/opt/airflow/kafka
       - ./airflow/dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
-      - ./jobs:/opt/spark-jobs
-      - ./spark_data:/opt/spark-data
+      - ./spark:/opt/airflow/spark
+      - ./data:/opt/data
       # Docker socket for running docker exec commands (spark-submit)
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
@@ -290,4 +290,4 @@ volumes:
   zookeeper_logs:
   kafka_data:
   postgres_data:
-  spark_data:
+  data:
