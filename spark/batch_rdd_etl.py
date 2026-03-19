@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-
+import json
 def main():
     spark = SparkSession.builder \
             .appName("Real Estate Data Pipeline") \
@@ -17,12 +17,13 @@ def main():
 
     df = spark.read.parquet("/opt/data/raw")
     rdd = df.rdd
+    parsed_rdd = rdd.map(lambda x: json.loads(x["message"]))
     # print(rdd.take(1))
     
-    rdd_rented = rdd.filter(lambda x: '"rental_status": "rented"' in x["message"])
+    rdd_rented = parsed_rdd.filter(lambda x: x["rental_status"] == "rented")
     rdd_rented.coalesce(1).saveAsTextFile('/opt/data/rented_listings')
 
-    rdd_revenue = rdd.map(lambda x: (x[0], x[8]*x[9])).reduceByKey(lambda x,y: x+y)
+    rdd_revenue = parsed_rdd.map(lambda x: (x["property_id"], x["rent"] * x["duration"])).reduceByKey(lambda x,y: x+y)
     rdd_revenue.coalesce(1).saveAsTextFile('/opt/data/revenue_per_property')
 
 if __name__ == "__main__":

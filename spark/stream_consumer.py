@@ -18,6 +18,7 @@ def main():
     # The value column contains the actual message (as bytes)
     messages = kafka_df.selectExpr("CAST(value AS STRING) as message")
 
+    # Write to console (for demonstration)
     query = messages.writeStream \
         .trigger(processingTime="10 seconds") \
         .outputMode("append") \
