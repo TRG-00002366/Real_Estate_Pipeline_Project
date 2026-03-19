@@ -10,21 +10,15 @@ def main():
 
     # 3A
 
-    # rdd = sc.parallelize(data) # TODO replace with load from parquet 
-    # df = spark.read.parquet("/opt/data/raw")
-    # rdd = df.rdd
-    # rdd.coalesce(1).saveAsTextFile('/opt/data/all_data_test')
-
-    df = spark.read.parquet("/opt/data/raw")
+    df = spark.read.parquet("/opt/data/raw/listing_events")
     rdd = df.rdd
     parsed_rdd = rdd.map(lambda x: json.loads(x["message"]))
-    # print(rdd.take(1))
     
     rdd_rented = parsed_rdd.filter(lambda x: x["rental_status"] == "rented")
-    rdd_rented.coalesce(1).saveAsTextFile('/opt/data/rented_listings')
+    rdd_rented.coalesce(1).saveAsTextFile('/opt/data/transformed/rented_listings')
 
     rdd_revenue = parsed_rdd.map(lambda x: (x["property_id"], x["rent"] * x["duration"])).reduceByKey(lambda x,y: x+y)
-    rdd_revenue.coalesce(1).saveAsTextFile('/opt/data/revenue_per_property')
+    rdd_revenue.coalesce(1).saveAsTextFile('/opt/data/transformed/revenue_per_property')
 
 if __name__ == "__main__":
     main()

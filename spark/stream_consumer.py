@@ -33,7 +33,7 @@ def main():
         .trigger(processingTime="10 seconds") \
         .outputMode("append") \
         .format("parquet") \
-        .option("path", "/opt/data/raw") \
+        .option("path", "/opt/data/raw/listing_events") \
         .option("checkpointLocation", "/opt/data/tmp/checkpoint") \
         .start()
 

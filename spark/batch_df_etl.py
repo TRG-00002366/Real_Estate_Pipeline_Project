@@ -25,10 +25,10 @@ def main():
         StructField('city', StringType(), True),
     ])
 
-    df_string = spark.read.parquet("/opt/data/raw")
+    df_string = spark.read.parquet("/opt/data/raw/listing_events")
     df_parsed = df_string.select(from_json(df_string.message, schema).alias("data"))
     df = df_parsed.select("data.*")
-    df.cache() # TODO add parttioning/bucketing
+    df.cache()
     df.count()
 
 
@@ -38,13 +38,13 @@ def main():
         sum('revenue').alias('total_revenue'),
         avg('revenue').alias('average_rental_value')
     )
-    hourly_rentals.write.mode("overwrite").parquet('/opt/data/hourly_rentals')
+    hourly_rentals.write.mode("overwrite").parquet('/opt/data/transformed/hourly_rentals')
 
 
     # Rentals by Bedroom Count
     window_partition = Window.partitionBy("bedrooms")
     rentals_by_bedrooms = df.withColumn('rentals_by_bedrooms', count(col('property_id')).over(window_partition))
-    rentals_by_bedrooms.write.mode("overwrite").parquet('/opt/data/rentals_by_bedrooms')
+    rentals_by_bedrooms.write.mode("overwrite").parquet('/opt/data/transformed/rentals_by_bedrooms')
 
 
     # State Revenue
@@ -63,12 +63,12 @@ def main():
     states.createOrReplaceTempView('states')
 
     revenue_by_state = spark.sql('SELECT s.state, SUM(l.rent*l.duration) AS revenue FROM (listings l INNER JOIN states s ON l.city = s.city) GROUP BY s.state')
-    revenue_by_state.write.mode("overwrite").parquet('/opt/data/revenue_by_state')
+    revenue_by_state.write.mode("overwrite").parquet('/opt/data/transformed/revenue_by_state')
 
 
     # Rental Status Breakdown
     status_breakdown = df.groupBy('building_type').pivot('rental_status', ['rented', 'open']).agg(count('rental_status')).fillna(0)
-    status_breakdown.write.mode("overwrite").parquet('/opt/data/status_breakdown')
+    status_breakdown.write.mode("overwrite").parquet('/opt/data/transformed/status_breakdown')
 
 if __name__ == "__main__":
     main()
