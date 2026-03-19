@@ -164,7 +164,7 @@ class RentalListingGen:
         ]
         self.city_weights = [self.fake.random_int(min=1, max=30) for i in range(100)]
         self.status_types = ("open", "rented")
-        self.building_types = ("Apartment", "Single Family", "Other")
+        self.building_types = ["Apartment", "Single Family", "Other"]
 
     def generate_listing(self):
 
