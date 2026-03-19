@@ -87,7 +87,7 @@ All services should show `running` (except `airflow-init` which exits after setu
 
 ```bash
 # Produce 500 order events to the 'listing-events' topic
-docker compose exec --user airflow airflow-scheduler python kafka/producer.py --num-events 500
+docker compose exec --user airflow airflow-scheduler python opt/airflow/kafka/producer.py --num-events 500
 ```
 
 Verify events were produced:
