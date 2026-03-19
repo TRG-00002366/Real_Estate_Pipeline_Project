@@ -197,12 +197,13 @@ class RentalListingGen:
     def post_listing(self):
 
         rental_status = "open"
-
+        building_type = random.choices(self.building_types, weights=[10, 6, 2], k=1)[0]
         posted_on = datetime.now()
         rented_on = None
         listing = {
             "property_id": self.fake.unique.random_int(min=10000000, max=99999999),
             "customer_id": self.fake.unique.random_int(min=10000000, max=99999999),
+            "building_type": building_type,
             "year_built": self.fake.random_int(min=1950, max=2024),
             "posted_on": posted_on.isoformat(),
             "rented_on": rented_on.isoformat() if rented_on else None,
@@ -239,7 +240,7 @@ def main():
 
     
     for i in range(20):
-        future=producer.send('listing-events',listing_gen.generate_listing())
+        future=producer.send('listing-events',listing_gen.post_listing())
         time.sleep(1)
     producer.close()
 
