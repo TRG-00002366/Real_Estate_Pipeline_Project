@@ -1,6 +1,15 @@
 from pyspark.sql import SparkSession
+import argparse
 
 def main():
+
+    #parse args
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--duration",type=int,default=30)
+    parser.add_argument("--bootstrap-servers",type=str,default='kafka:9092')
+    args = parser.parse_args()
+    duration= args.duration
+
     # Create Spark session
     spark = SparkSession.builder \
         .appName("Real Estate Data Pipeline") \
@@ -10,6 +19,7 @@ def main():
     # Read from Kafka topic as a streaming DataFrame
     kafka_df = spark.readStream \
         .format("kafka") \
+        .option("startingOffsets", "earliest") \
         .option("kafka.bootstrap.servers", "kafka:9092") \
         .option("subscribe", "listing-events") \
         .load()
@@ -27,7 +37,10 @@ def main():
         .option("checkpointLocation", "/opt/data/tmp/checkpoint") \
         .start()
 
-    query.awaitTermination()
+
+    query.awaitTermination(duration)
+    query.stop()
+    spark.stop()
 
 if __name__ == "__main__":
     main()

@@ -222,8 +222,7 @@ def create_producer(bootstrap_servers: str = 'kafka:9092'):
     )
     return producer
 
-
-if __name__ == "__main__":
+def main():
     producer = create_producer()
 
     parser = argparse.ArgumentParser()
@@ -233,7 +232,9 @@ if __name__ == "__main__":
 
     for i in range(num_events):
         future=producer.send('listing-events',listing_gen.generate_listing())
-        time.sleep(1)
     producer.close()
+    
+if __name__ == "__main__":
+    main()
 
 
