@@ -164,10 +164,13 @@ class RentalListingGen:
         ]
         self.city_weights = [self.fake.random_int(min=1, max=30) for i in range(100)]
         self.status_types = ("open", "rented")
+        self.building_types = ("Apartment", "Single Family", "Other")
 
     def generate_listing(self):
 
         rental_status = random.choices(self.status_types, weights=[4, 10], k=1)[0]
+
+        building_type = random.choices(self.building_types, weights=[10, 6, 2], k=1)[0]
 
         posted_on = self.fake.date_time_between(start_date="-2y", end_date="now")
 
@@ -178,6 +181,7 @@ class RentalListingGen:
         listing = {
             "property_id": self.fake.unique.random_int(min=10000000, max=99999999),
             "customer_id": self.fake.unique.random_int(min=10000000, max=99999999),
+            "building_type": building_type,
             "year_built": self.fake.random_int(min=1950, max=2024),
             "posted_on": posted_on.isoformat(),
             "rented_on": rented_on.isoformat() if rented_on else None,
