@@ -8,20 +8,16 @@ def main():
 
     sc = spark.sparkContext
 
-    # sample data - replace later
-    data = [
-        ('1', 'customer 1', 'Apartment', 2000, '2026-02-10T09:00:00Z', '2026-03-03T12:32:13Z', 1, 900, 2000, 12, 'rented', 'New York'),
-        ('2', 'customer 2', 'Single Family', 1980, '2025-07-20T12:00:00Z', '2026-01-30T19:45:22Z', 3, 2350, 4000, 24, 'rented', 'Los Angeles'),
-        ('3', 'customer 3', 'Apartment', 1970, '2025-10-31T06:17:55Z', None, 1, 680, 1500, 6, 'open', 'Chicago')
-    ]
-
     # 3A
 
     # rdd = sc.parallelize(data) # TODO replace with load from parquet 
+    # df = spark.read.parquet("/opt/data/raw")
+    # rdd = df.rdd
+    # rdd.coalesce(1).saveAsTextFile('/opt/data/all_data_test')
 
     df = spark.read.parquet("/opt/data/raw")
     rdd = df.rdd
-    print(rdd.take(1))
+    # print(rdd.take(1))
     
     rdd_rented = rdd.filter(lambda x: '"rental_status": "rented"' in x["message"])
     rdd_rented.coalesce(1).saveAsTextFile('/opt/data/rented_listings')
