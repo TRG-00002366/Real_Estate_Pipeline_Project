@@ -6,3 +6,7 @@ raw
 tmp
 rented_listings
 revenue_per_property
+hourly_rentals
+rentals_by_bedrooms
+revenue_by_state
+status_breakdown

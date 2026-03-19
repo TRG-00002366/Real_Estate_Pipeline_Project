@@ -35,4 +35,10 @@ with DAG(
     /opt/airflow/spark/batch_rdd_etl.py"
     )
 
-    start >> run_producer >> run_consumer >> run_batch_rdd >> end
+    run_batch_df = BashOperator(
+        task_id="run_batch_df",
+        bash_command="spark-submit \
+    /opt/airflow/spark/batch_df_etl.py"
+    )
+
+    start >> run_producer >> run_consumer >> run_batch_rdd >> run_batch_df >> end
