@@ -225,10 +225,8 @@ services:
       SPARK_MASTER_URL: spark://spark-master:7077
     volumes:
       - ./kafka:/opt/airflow/kafka
-      - ./dags:/opt/airflow/dags
+      - ./airflow/dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - ./scripts:/opt/airflow/scripts
       - ./jobs:/opt/spark-jobs
       - ./spark_data:/opt/spark-data
     healthcheck:
@@ -266,10 +264,8 @@ services:
       SPARK_MASTER_URL: spark://spark-master:7077
     volumes:
       - ./kafka:/opt/airflow/kafka
-      - ./dags:/opt/airflow/dags
+      - ./airflow/dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - ./scripts:/opt/airflow/scripts
       - ./jobs:/opt/spark-jobs
       - ./spark_data:/opt/spark-data
       # Docker socket for running docker exec commands (spark-submit)
