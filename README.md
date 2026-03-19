@@ -103,10 +103,10 @@ docker compose exec kafka kafka-console-consumer `
 ### Step 4: Run the Spark Streaming Consumer
 
 ```bash
-docker compose exec airflow-scheduler spark-submit \
-    --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
-    /opt/airflow/spark/stream_consumer.py \
-    --bootstrap-servers kafka:9092 \
+docker compose exec airflow-scheduler spark-submit `
+    --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 `
+    /opt/airflow/spark/stream_consumer.py `
+    --bootstrap-servers kafka:9092 `
     --duration 120
 ```
 

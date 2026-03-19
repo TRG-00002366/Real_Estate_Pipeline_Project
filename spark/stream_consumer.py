@@ -4,13 +4,13 @@ def main():
     # Create Spark session
     spark = SparkSession.builder \
         .appName("Real Estate Data Pipeline") \
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:4.1.1") \
+        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
         .getOrCreate()
 
     # Read from Kafka topic as a streaming DataFrame
     kafka_df = spark.readStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", "localhost:9092") \
+        .option("kafka.bootstrap.servers", "kafka:9092") \
         .option("subscribe", "listing-events") \
         .load()
 
@@ -23,8 +23,8 @@ def main():
         .trigger(processingTime="10 seconds") \
         .outputMode("append") \
         .format("parquet") \
-        .option("path", "/opt/airflow/data") \
-        .option("checkpointLocation", "/opt/airflow/data/tmp/checkpoint") \
+        .option("path", "/opt/data/raw") \
+        .option("checkpointLocation", "/opt/data/tmp/checkpoint") \
         .start()
 
     query.awaitTermination()

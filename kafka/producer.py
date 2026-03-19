@@ -222,16 +222,18 @@ def create_producer(bootstrap_servers: str = 'kafka:9092'):
     )
     return producer
 
-producer = create_producer()
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--num-events",type=int,default=10)
-args = parser.parse_args()
-num_events = args.num_events
+if __name__ == "__main__":
+    producer = create_producer()
 
-for i in range(num_events):
-    future=producer.send('listing-events',listing_gen.generate_listing())
-    time.sleep(1)
-producer.close()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--num-events",type=int,default=10)
+    args = parser.parse_args()
+    num_events = args.num_events
+
+    for i in range(num_events):
+        future=producer.send('listing-events',listing_gen.generate_listing())
+        time.sleep(1)
+    producer.close()
 
 

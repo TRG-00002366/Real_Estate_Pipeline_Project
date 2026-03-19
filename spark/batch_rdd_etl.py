@@ -17,9 +17,13 @@ def main():
 
     # 3A
 
-    rdd = sc.parallelize(data) # TODO replace with load from parquet 
+    # rdd = sc.parallelize(data) # TODO replace with load from parquet 
 
-    rdd_rented = rdd.filter(lambda x: x[10] == 'rented')
+    df = spark.read.parquet("/opt/data/raw")
+    rdd = df.rdd
+    print(rdd.take(1))
+    
+    rdd_rented = rdd.filter(lambda x: '"rental_status": "rented"' in x["message"])
     rdd_rented.coalesce(1).saveAsTextFile('/opt/data/rented_listings')
 
     rdd_revenue = rdd.map(lambda x: (x[0], x[8]*x[9])).reduceByKey(lambda x,y: x+y)
