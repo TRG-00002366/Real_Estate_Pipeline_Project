@@ -2,7 +2,16 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 from airflow.utils.trigger_rule import TriggerRule
-from datetime import datetime
+from datetime import datetime, timedelta
+
+
+
+default_args = {
+    'owner': 'airflow',
+    'retries': 3,
+    'retry_delay': timedelta(minutes=5),
+}
+
 
 with DAG(
     dag_id="listing_pipeline",
