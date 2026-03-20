@@ -9,6 +9,7 @@ def main():
     parser.add_argument("--bootstrap-servers",type=str,default='kafka:9092')
     args = parser.parse_args()
     duration= args.duration
+    bootstrap_servers = args.bootstrap_servers
 
     # Create Spark session
     spark = SparkSession.builder \
@@ -21,7 +22,7 @@ def main():
     kafka_df = spark.readStream \
         .format("kafka") \
         .option("startingOffsets", "earliest") \
-        .option("kafka.bootstrap.servers", "kafka:9092") \
+        .option("kafka.bootstrap.servers", bootstrap_servers) \
         .option("subscribe", "listing-events") \
         .load()
 
