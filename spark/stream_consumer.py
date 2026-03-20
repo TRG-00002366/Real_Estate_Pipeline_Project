@@ -14,6 +14,7 @@ def main():
     spark = SparkSession.builder \
         .appName("Real Estate Data Pipeline") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
+        .master("spark://spark-master:7077") \
         .getOrCreate()
 
     # Read from Kafka topic as a streaming DataFrame

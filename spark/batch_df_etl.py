@@ -5,7 +5,7 @@ from pyspark.sql.functions import col, lit, when, count, sum, avg, substring, fr
 def main():
     spark = SparkSession.builder \
             .appName("Real Estate Data Pipeline") \
-            .master("local[*]") \
+            .master("spark://spark-master:7077") \
             .getOrCreate()
 
     # 3B
