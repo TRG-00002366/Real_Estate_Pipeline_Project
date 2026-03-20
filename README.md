@@ -107,7 +107,7 @@ docker compose exec airflow-scheduler spark-submit `
     --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 `
     /opt/airflow/spark/stream_consumer.py `
     --bootstrap-servers kafka:9092 `
-    --duration 120
+    --duration 30
 ```
 
 This will consume messages for 120 seconds and write raw Parquet files to `data/raw/orders/`.

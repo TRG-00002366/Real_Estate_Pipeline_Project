@@ -24,7 +24,7 @@ A property platform company wants to:
 │ Listing Event│       │             │       │  PySpark Streaming   │
 │  Simulator   │──────▶│   Kafka     │──────▶│  Consumer / ETL      │
 │  (Producer)  │       │  (Topic:    │       │  (Spark Structured   │
-│              │       │rental_listings)│    │   Streaming)          │
+│              │       │listing-events)│    │   Streaming)          │
 └──────────────┘       └─────────────┘       └──────────┬────────────┘
                                                         │
                                                         ▼

@@ -218,7 +218,7 @@ class RentalListingGen:
 
 
 
-listing_gen = RentalListingGen()
+
 def create_producer(bootstrap_servers: str = 'kafka:9092'):
     producer = KafkaProducer(
         bootstrap_servers = bootstrap_servers,
@@ -229,18 +229,20 @@ def create_producer(bootstrap_servers: str = 'kafka:9092'):
 
 def main():
     producer = create_producer()
-
+    listing_gen = RentalListingGen()
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-events",type=int,default=10)
     args = parser.parse_args()
     num_events = args.num_events
 
-    for i in range(num_events-20):
-        future=producer.send('listing-events',listing_gen.generate_listing())
+    # for i in range(num_events-20):
+    #     future=producer.send('listing-events',listing_gen.generate_listing())
 
     
-    for i in range(20):
-        future=producer.send('listing-events',listing_gen.post_listing())
+    for i in range(int(num_events/2)):
+        producer.send('listing-events',listing_gen.post_listing())
+        producer.send('listing-events',listing_gen.generate_listing())
         time.sleep(1)
     producer.close()
 
