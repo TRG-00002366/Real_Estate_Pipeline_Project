@@ -1,7 +1,13 @@
 __pycache__/
+*.pyc
 venv
 .ipynb_checkpoints
 logs/
 raw
 tmp
 transformed
+dbt_env/
+target/
+dbt_packages/
+logs/
+profiles.yml
