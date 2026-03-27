@@ -41,8 +41,6 @@ models:
       +schema: gold
       +materialized: table
 
-    example:
-      +materialized: view
 seeds:
   dbt_listings:
     +schema: silver
