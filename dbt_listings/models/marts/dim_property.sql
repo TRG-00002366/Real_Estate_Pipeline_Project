@@ -1,10 +1,10 @@
-WITH listings AS (SELECT * FROM {{ref('stg_listings_enriched')}})
+WITH properties AS (SELECT * FROM {{ref('stg_properties_deduped')}})
 
-SELECT 
-    {{ dbt_utils.generate_surrogate_key(['listings.property_id']) }} AS property_key,
+SELECT distinct
+    {{ dbt_utils.generate_surrogate_key(['properties.property_id']) }} AS property_key,
     property_id,
     building_type,
     year_built,
     bedrooms,
-    listings.size
-FROM listings
+    properties.size
+FROM properties
