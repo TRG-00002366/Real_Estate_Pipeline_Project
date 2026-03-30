@@ -262,12 +262,22 @@ services:
       AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: 60
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPARK_MASTER_URL: spark://spark-master:7077
+      SNOWFLAKE_ACCOUNT: ${SNOWFLAKE_ACCOUNT}
+      SNOWFLAKE_USER: ${SNOWFLAKE_USER}
+      SNOWFLAKE_PASSWORD: ${SNOWFLAKE_PASSWORD}
+      SNOWFLAKE_DATABASE: ${SNOWFLAKE_DATABASE}
+      SNOWFLAKE_SCHEMA: ${SNOWFLAKE_SCHEMA}
+      SNOWFLAKE_WAREHOUSE: ${SNOWFLAKE_WAREHOUSE}
+      
     volumes:
       - ./kafka:/opt/airflow/kafka
       - ./airflow/dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./spark:/opt/airflow/spark
       - ./data:/opt/data
+      - ./dbt_listings:/opt/airflow/dbt_listings
+      - ./profiles.yml:/root/.dbt/profiles.yml:ro
+
       # Docker socket for running docker exec commands (spark-submit)
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:

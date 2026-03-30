@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+.env
 venv
 .ipynb_checkpoints
 logs/
@@ -10,4 +11,3 @@ dbt_env/
 target/
 dbt_packages/
 logs/
-profiles.yml

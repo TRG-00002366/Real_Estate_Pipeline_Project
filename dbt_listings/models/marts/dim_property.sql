@@ -1,4 +1,4 @@
-WITH properties AS (SELECT * FROM {{ref('stg_properties_deduped')}})
+WITH properties AS (SELECT property_id,building_type,year_built,bedrooms,size FROM {{ref('stg_listings_enriched')}})
 
 SELECT distinct
     {{ dbt_utils.generate_surrogate_key(['properties.property_id']) }} AS property_key,

@@ -35,7 +35,7 @@ Louisville,Kentucky
 Lexington,Kentucky
 New Orleans,Louisiana
 Baton Rouge,Louisiana
-Portland,Maine
+Portland,Ambiguous
 Bangor,Maine
 Baltimore,Maryland
 Annapolis,Maryland
@@ -71,13 +71,11 @@ Columbus,Ohio
 Cleveland,Ohio
 Oklahoma City,Oklahoma
 Tulsa,Oklahoma
-Portland,Oregon
 Eugene,Oregon
 Philadelphia,Pennsylvania
 Pittsburgh,Pennsylvania
 Providence,Rhode Island
 Warwick,Rhode Island
-Charleston,South Carolina
 Columbia,South Carolina
 Sioux Falls,South Dakota
 Rapid City,South Dakota
@@ -93,7 +91,7 @@ Virginia Beach,Virginia
 Richmond,Virginia
 Seattle,Washington
 Spokane,Washington
-Charleston,West Virginia
+Charleston,Ambiguous
 Morgantown,West Virginia
 Milwaukee,Wisconsin
 Madison,Wisconsin
