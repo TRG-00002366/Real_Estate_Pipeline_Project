@@ -6,12 +6,11 @@
 WITH listings AS (
     SELECT *
     FROM {{ ref('stg_listings_enriched') }}
-    {% if is_incremental() %}
-        WHERE ingestion_ts > (
-            SELECT MAX(ingestion_ts)
-            FROM {{ this }}
-        )
-    {% endif %}
+{% if is_incremental() %}
+WHERE listing_id NOT IN (
+    SELECT listing_id FROM {{ this }}
+)
+{% endif %}
 ),
 
 locations AS (

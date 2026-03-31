@@ -10,6 +10,8 @@ import argparse
 class RentalListingGen:
     def __init__(self):
         self.fake = Faker()
+
+        #List of cities
         self.cities = [
             # Alabama
             "Birmingham",
@@ -166,53 +168,85 @@ class RentalListingGen:
         self.status_types = ("open", "rented")
         self.building_types = ["Apartment", "Single Family", "Other"]
 
+
+        self.properties = []
+
+        #Multiplier for size, based on bedrooms
+        self.sizemulti = {
+            1:0.33,
+            2:0.5,
+            3:0.75,
+            4:1.0,
+            5:1.3
+        }
+        for _ in range(5000):
+            property_data = {
+                "property_id": self.fake.unique.random_int(min=10000000, max=99999999),
+
+                "building_type": random.choices(
+                    ["Apartment", "Single Family", "Other"],
+                    weights=[10, 6, 2],
+                    k=1
+                )[0],
+
+                "year_built": self.fake.random_int(min=1950, max=2024),
+
+                "bedrooms": int(min(np.random.geometric(p=0.35), 5)),
+
+                "size": int(np.clip(np.random.normal(loc=2000, scale=300), 500, 5000)),
+
+                "city": random.choices(self.cities, self.city_weights, k=1)[0],
+            }
+            property_data['size'] = int(property_data['size']*self.sizemulti[property_data["bedrooms"]])
+            self.properties.append(property_data)
+
+
     def generate_listing(self):
 
         rental_status = random.choices(self.status_types, weights=[4, 10], k=1)[0]
 
-        building_type = random.choices(self.building_types, weights=[10, 6, 2], k=1)[0]
-
         posted_on = self.fake.date_time_between(start_date="-2y", end_date="now")
+
+        property_data = random.choice(self.properties)
 
         rented_on = None
         if rental_status == "rented":
             rented_on = posted_on + timedelta(days=self.fake.random_int(min=1, max=60))
 
         listing = {
-            "property_id": self.fake.unique.random_int(min=10000000, max=99999999),
+            "property_id": property_data["property_id"],
+            "building_type": property_data["building_type"],
+            "year_built": property_data["year_built"],
+            "bedrooms": property_data["bedrooms"],
+            "size": property_data["size"],
+            "city": property_data["city"],
             "customer_id": self.fake.unique.random_int(min=10000000, max=99999999),
-            "building_type": building_type,
-            "year_built": self.fake.random_int(min=1950, max=2024),
             "posted_on": posted_on.isoformat(),
             "rented_on": rented_on.isoformat() if rented_on else None,
-            "bedrooms": min(np.random.geometric(p=0.35), 5),
-            "rent": int(np.clip(np.random.normal(loc=2200, scale=500), 900, 10000)),
-            "size": int(np.clip(np.random.normal(loc=2000, scale=300), 900, 5000)),
+            "rent" : int(np.clip(1000 + property_data['bedrooms'] * 300 + property_data['size'] * 0.8 + np.random.normal(0, 300),900,10000)),
             "duration": self.fake.random_element([6, 12, 18, 24]),
-            "city": random.choices(self.cities, self.city_weights, k=1)[0],
             "rental_status": rental_status,
         }
         return listing
 
     def post_listing(self):
-
-        rental_status = "open"
-        building_type = random.choices(self.building_types, weights=[10, 6, 2], k=1)[0]
+        
         posted_on = datetime.now()
-        rented_on = None
+        property_data = random.choice(self.properties)
+
         listing = {
-            "property_id": self.fake.unique.random_int(min=10000000, max=99999999),
+            "property_id": property_data["property_id"],
+            "building_type": property_data["building_type"],
+            "year_built": property_data["year_built"],
+            "bedrooms": property_data["bedrooms"],
+            "size": property_data["size"],
+            "city": property_data["city"],
             "customer_id": self.fake.unique.random_int(min=10000000, max=99999999),
-            "building_type": building_type,
-            "year_built": self.fake.random_int(min=1950, max=2024),
             "posted_on": posted_on.isoformat(),
-            "rented_on": rented_on.isoformat() if rented_on else None,
-            "bedrooms": int(min(np.random.geometric(p=0.35), 5)),
-            "rent": int(np.clip(np.random.normal(loc=2200, scale=500), 900, 10000)),
-            "size": int(np.clip(np.random.normal(loc=2000, scale=300), 900, 5000)),
+            "rented_on": None,
+            "rent" : int(np.clip(1000 + property_data['bedrooms'] * 300 + property_data['size'] * 0.8 + np.random.normal(0, 300),900,10000)),
             "duration": self.fake.random_element([6, 12, 18, 24]),
-            "city": random.choices(self.cities, self.city_weights, k=1)[0],
-            "rental_status": rental_status,
+            "rental_status": "open",
         }
         return listing
 
@@ -236,14 +270,10 @@ def main():
     args = parser.parse_args()
     num_events = args.num_events
 
-    # for i in range(num_events-20):
-    #     future=producer.send('listing-events',listing_gen.generate_listing())
-
     
     for i in range(int(num_events/2)):
         producer.send('listing-events',listing_gen.post_listing())
         producer.send('listing-events',listing_gen.generate_listing())
-        time.sleep(1)
     producer.close()
 
 if __name__ == "__main__":
