@@ -271,8 +271,7 @@ def main():
     num_events = args.num_events
 
     
-    for i in range(int(num_events/2)):
-        producer.send('listing-events',listing_gen.post_listing())
+    for i in range(int(num_events)):
         producer.send('listing-events',listing_gen.generate_listing())
     producer.close()
 
