@@ -39,13 +39,6 @@ ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 USER airflow
 
 # Install Python dependencies for Kafka integration
-RUN pip install --no-cache-dir \
-    pyspark==3.5.0 \
-    kafka-python \
-    confluent-kafka \
-    apache-airflow-providers-apache-kafka \
-    --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.3/constraints-3.8.txt"
-
 COPY requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.3/constraints-3.8.txt"

@@ -254,6 +254,7 @@ services:
     user: root
     command: scheduler
     environment:
+      AIRFLOW_CONN_SNOWFLAKE_DEFAULT: 'snowflake://${SNOWFLAKE_USER}:${SNOWFLAKE_PASSWORD}@/BRONZE?account=${SNOWFLAKE_ACCOUNT}&database=PROJECT_DB&warehouse=COMPUTE_WH&role=ACCOUNTADMIN'
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__CORE__FERNET_KEY: 'zTvhZH8vXj5lZK8bT9nxC3wR2fHgJ6mN4pQ7sU0vY1c='

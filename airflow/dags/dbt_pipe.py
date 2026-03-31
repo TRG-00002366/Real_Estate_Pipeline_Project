@@ -30,4 +30,10 @@ with DAG(
         task_id="run_dbt",
         bash_command="dbt run --project-dir /opt/airflow/dbt_listings --profiles-dir /root/.dbt"
     )
-    start >> run_dbt >> end
+
+    seed_dbt = BashOperator(
+        task_id="seed_dbt",
+        bash_command="dbt seed --project-dir /opt/airflow/dbt_listings --profiles-dir /root/.dbt"
+    )
+
+    start >> seed_dbt >> run_dbt >> end

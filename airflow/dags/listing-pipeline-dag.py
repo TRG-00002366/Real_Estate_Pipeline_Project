@@ -26,7 +26,7 @@ with DAG(
                         )
     run_producer = BashOperator(
         task_id="run_producer",
-        bash_command="python /opt/airflow/kafka/producer.py --num-events 50000"
+        bash_command="python /opt/airflow/kafka/producer.py --num-events 500"
     )
 
     run_consumer = BashOperator(
@@ -35,7 +35,7 @@ with DAG(
     --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
     /opt/airflow/spark/stream_consumer.py \
     --bootstrap-servers kafka:9092 \
-    --duration 40"
+    --duration 20"
     )
 
     # run_batch_rdd = BashOperator(

@@ -7,3 +7,4 @@ confluent-kafka
 apache-airflow-providers-apache-kafka 
 dbt-core
 dbt-snowflake
+snowflake-connector-python
