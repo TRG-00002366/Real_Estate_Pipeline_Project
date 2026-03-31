@@ -179,7 +179,7 @@ class RentalListingGen:
             4:1.0,
             5:1.3
         }
-        for _ in range(5000):
+        for _ in range(2500):
             property_data = {
                 "property_id": self.fake.unique.random_int(min=10000000, max=99999999),
 
