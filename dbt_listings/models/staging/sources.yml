@@ -1,39 +1,19 @@
 version: 2
 
-# =============================================================================
-# DEMO: dbt Sources Definition
-# Day: 4-Thursday
-# Purpose: Declare external tables that dbt doesn't manage
-# =============================================================================
-#
-# INSTRUCTOR NOTES:
-# Sources tell dbt about tables that exist outside dbt's control.
-# This enables:
-# - Lineage tracking from raw data
-# - Source freshness checks
-# - Documentation
-#
-# KEY BRIDGE: "Sources are like Airflow external task sensors - 
-# they represent data you didn't create but depend on."
-# =============================================================================
-
 sources:
   - name: bronze
     description: "Raw data landing zone - populated by Snowpipe or COPY INTO"
     database: PROJECT_DB
     schema: BRONZE
     
-    # Optional: Check source freshness
-    # Requires a timestamp column in the source table
+
     freshness:
       warn_after: {count: 24, period: hour}
       error_after: {count: 48, period: hour}
-    
-    # Loaded timestamp column (for freshness checks)
+  
     loaded_at_field: ingestion_ts
     
     tables:
-      # Raw events from streaming pipeline
       - name: raw_listings
         description: "Raw event data ingested from Snowpipe or batch loads"
         columns:
@@ -44,20 +24,3 @@ sources:
           - name: ingestion_ts
             description: "Timestamp when event was ingested"
       
-
-# =============================================================================
-# INSTRUCTOR TALKING POINTS:
-#
-# 1. "The 'name' under sources is a logical name you choose. It doesn't
-#    have to match the schema name (though it's common to do so)."
-#
-# 2. "database and schema tell dbt WHERE the table lives."
-#
-# 3. "In your models, you'll reference this as: 
-#    {{ source('bronze', 'raw_listings') }}"
-#
-# 4. "Freshness checks are optional but powerful - they alert you when
-#    source data is stale. Like monitoring Kafka lag."
-#
-# 5. "Column descriptions become part of auto-generated documentation."
-# =============================================================================
