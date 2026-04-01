@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_listings
+    description: "Cleansed listings from raw layer"
+    config:
+      materialized: view
+    columns:
+      - name: listing_id
+        tests:
+          - unique
+          - not_null
+
+      - name: posted_on
+        tests:
+          - not_null
+
+      - name: property_id
+        tests:
+          - not_null
+
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: rental_status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['open', 'rented']
+
+  - name: stg_listings_enriched
+    description: "Enriched listings with states"
+    config:
+      materialized: view
+    columns:
+      - name: listing_id
+        tests:
+          - unique
+          - not_null
+
+      - name: posted_on
+        tests:
+          - not_null
+
+      - name: property_id
+        tests:
+          - not_null
+
+      - name: customer_id
+        tests:
+          - not_null
+
+      - name: state
+        tests:
+          - not_null
+
+      - name: city
+        tests:
+          - not_null
+
+      - name: rental_status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['open', 'rented']

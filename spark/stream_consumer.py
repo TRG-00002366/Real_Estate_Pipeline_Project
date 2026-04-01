@@ -9,18 +9,20 @@ def main():
     parser.add_argument("--bootstrap-servers",type=str,default='kafka:9092')
     args = parser.parse_args()
     duration= args.duration
+    bootstrap_servers = args.bootstrap_servers
 
     # Create Spark session
     spark = SparkSession.builder \
         .appName("Real Estate Data Pipeline") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
+        .master("spark://spark-master:7077") \
         .getOrCreate()
 
     # Read from Kafka topic as a streaming DataFrame
     kafka_df = spark.readStream \
         .format("kafka") \
         .option("startingOffsets", "earliest") \
-        .option("kafka.bootstrap.servers", "kafka:9092") \
+        .option("kafka.bootstrap.servers", bootstrap_servers) \
         .option("subscribe", "listing-events") \
         .load()
 

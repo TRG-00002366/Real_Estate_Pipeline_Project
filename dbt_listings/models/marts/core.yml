@@ -1,0 +1,161 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Date dimension used for posted and rented dates in the rental listings mart."
+    columns:
+      - name: date_key
+        description: "Surrogate key for the date dimension."
+        tests:
+          - unique
+          - not_null
+
+      - name: full_date
+        description: "Calendar date."
+        tests:
+          - unique
+          - not_null
+
+      - name: year
+        description: "Calendar year."
+        tests:
+          - not_null
+
+      - name: quarter
+        description: "Calendar quarter."
+        tests:
+          - not_null
+
+      - name: month_number
+        description: "Month number from 1 to 12."
+        tests:
+          - not_null
+
+      - name: month_name
+        description: "Month name."
+        tests:
+          - not_null
+
+      - name: day_of_week
+        description: "Day of week number."
+        tests:
+          - not_null
+
+      - name: day_name
+        description: "Day name."
+        tests:
+          - not_null
+
+  - name: dim_location
+    description: "Location dimension containing normalized city and state values for listings."
+    columns:
+      - name: location_key
+        description: "Surrogate key for the location dimension."
+        tests:
+          - unique
+          - not_null
+
+      - name: city
+        description: "City where the property is located."
+        tests:
+          - not_null
+
+      - name: state
+        description: "State where the property is located."
+        tests:
+          - not_null
+
+  - name: dim_property
+    description: "Property dimension containing descriptive property attributes."
+    columns:
+      - name: property_key
+        description: "Surrogate key for the property dimension."
+        tests:
+          - unique
+          - not_null
+
+      - name: property_id
+        description: "Source-system property identifier."
+        tests:
+          - not_null
+
+      - name: building_type
+        description: "Type of building for the property."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Apartment', 'Single Family','Other']
+
+      - name: year_built
+        description: "Year the property was built."
+        tests:
+          - not_null
+
+      - name: bedrooms
+        description: "Number of bedrooms in the property."
+        tests:
+          - not_null
+
+      - name: size
+        description: "Size of the property, typically in square feet."
+        tests:
+          - not_null
+
+  - name: fct_listings
+    description: "Fact table containing rental listing activity and measures for analysis."
+    columns:
+      - name: listing_id
+        description: "Unique listing identifier at the fact table grain."
+        tests:
+          - unique
+          - not_null
+
+      - name: property_key
+        description: "Foreign key to dim_property."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_property')
+              field: property_key
+
+      - name: location_key
+        description: "Foreign key to dim_location."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: location_key
+
+      - name: posted_date_key
+        description: "Foreign key to dim_date for the listing posted date."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: rented_date_key
+        description: "Foreign key to dim_date for the rented date. Nullable for open listings."
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: rent
+        description: "Monthly rent amount for the listing."
+        tests:
+          - not_null
+
+      - name: duration
+        description: "Lease duration in months."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [6, 12, 18, 24]
+
+      - name: rental_status
+        description: "Current status of the listing."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['open', 'rented']

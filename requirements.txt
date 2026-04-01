@@ -5,3 +5,6 @@ pyspark==3.5.0
 kafka-python 
 confluent-kafka 
 apache-airflow-providers-apache-kafka 
+dbt-core
+dbt-snowflake
+snowflake-connector-python

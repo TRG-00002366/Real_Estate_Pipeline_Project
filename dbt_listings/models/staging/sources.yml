@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: "Raw data landing zone - populated by Snowpipe or COPY INTO"
+    database: PROJECT_DB
+    schema: BRONZE
+    
+
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+  
+    loaded_at_field: ingestion_ts
+    
+    tables:
+      - name: raw_listings
+        description: "Raw event data ingested from Snowpipe or batch loads"
+        columns:
+          - name: source_file
+            description: "source file for data"
+          - name: raw_data
+            description: "JSON payload with listing attributes"
+          - name: ingestion_ts
+            description: "Timestamp when event was ingested"
+      
