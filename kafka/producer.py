@@ -205,7 +205,7 @@ class RentalListingGen:
 
         rental_status = random.choices(self.status_types, weights=[4, 10], k=1)[0]
 
-        posted_on = self.fake.date_time_between(start_date="-2y", end_date="now")
+        posted_on = self.fake.date_time_between(start_date="-10y", end_date="now")
 
         property_data = random.choice(self.properties)
 
@@ -213,6 +213,8 @@ class RentalListingGen:
         if rental_status == "rented":
             rented_on = posted_on + timedelta(days=self.fake.random_int(min=1, max=60))
 
+        rent = int(np.clip(1000 + property_data['bedrooms'] * 300 + property_data['size'] * 0.8 + np.random.normal(0, 300),900,10000))
+        rent = rent *(1.002**((posted_on.year-2000)*12+posted_on.month))
         listing = {
             "property_id": property_data["property_id"],
             "building_type": property_data["building_type"],
@@ -223,7 +225,7 @@ class RentalListingGen:
             "customer_id": self.fake.unique.random_int(min=10000000, max=99999999),
             "posted_on": posted_on.isoformat(),
             "rented_on": rented_on.isoformat() if rented_on else None,
-            "rent" : int(np.clip(1000 + property_data['bedrooms'] * 300 + property_data['size'] * 0.8 + np.random.normal(0, 300),900,10000)),
+            "rent" : rent,
             "duration": self.fake.random_element([6, 12, 18, 24]),
             "rental_status": rental_status,
         }

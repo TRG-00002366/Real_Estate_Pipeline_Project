@@ -9,6 +9,6 @@ SELECT
     YEAR(d.date_value) AS year,
     DAYOFWEEK(d.date_value) IN (0, 6) AS is_weekend
 FROM (
-    SELECT DATEADD('day', SEQ4(), '2020-01-01')::DATE AS date_value
-    FROM TABLE(GENERATOR(ROWCOUNT => 3650))  -- 10 years
+    SELECT DATEADD('day', SEQ4(), '2015-01-01')::DATE AS date_value
+    FROM TABLE(GENERATOR(ROWCOUNT => 5000))  -- 10 years
 ) d
